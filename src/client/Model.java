@@ -6,36 +6,48 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URI;
+import java.util.concurrent.*;
 
 
 public class Model {
-    public String performRequest(String method, String language, String year, String query) {
-        // Implement your HTTP request logic here and return the response
-
-        try {
-            String urlString = "http://localhost:8100/";
-            if (query != null) {
-                urlString += "?=" + query;
+    public Future<String> performRequest(String method, String ip) {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        Future<String> future = executor.submit(new Callable<String>() {
+            @Override
+            public String call() throws Exception {
+                String response = "";
+                try {
+                    // First request to "/H"
+                    String urlString = "http://" + ip + "/H";
+                    URL url = new URI(urlString).toURL();
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setRequestMethod(method);
+                    conn.setDoOutput(true);
+    
+                    BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                    response = in.readLine();
+                    in.close();
+    
+                    // Wait for 5 seconds
+                    Thread.sleep(5000);
+    
+                    // Second request to "/L"
+                    urlString = "http://" + ip + "/L";
+                    url = new URI(urlString).toURL();
+                    conn = (HttpURLConnection) url.openConnection();
+                    conn.setRequestMethod(method);
+                    conn.setDoOutput(true);
+    
+                    in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                    response += "\n" + in.readLine();
+                    in.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return response;
             }
-            URL url = new URI(urlString).toURL();
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod(method);
-            conn.setDoOutput(true);
-
-            if (method.equals("POST") || method.equals("PUT")) {
-                OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream());
-                out.write(language + "," + year);
-                out.flush();
-                out.close();
-            }
-
-            BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            String response = in.readLine();
-            in.close();
-            return response;
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return "Error: " + ex.getMessage();
-        }
+        });
+        executor.shutdown(); // it's important to shutdown the executor after use
+        return future;
     }
 }

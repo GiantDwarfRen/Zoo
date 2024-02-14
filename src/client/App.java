@@ -4,8 +4,15 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.stage.Stage;
+import java.util.ArrayList;
+import java.util.concurrent.*;
+
+import java.util.Calendar;
 
 public class App extends Application {
+    private View view;
+    private static ArrayList<Machine> machines;
+    private static Model model;
 
     public static void main(String[] args) {
         launch(args);
@@ -14,40 +21,53 @@ public class App extends Application {
     @Override
     public void start(Stage primaryStage) {
         
-        View view = new View();
+        view = new View();
+        machines = view.getMachines();
         ScrollPane scrollPane = new ScrollPane(view.getVBox());
-        Model model = new Model();
-        Controller controller = new Controller(view, model);
+        // scrollPane.setStyle("-fx-background-color: #f8f3c9;");
+        model = new Model();
 
         Scene scene = new Scene(scrollPane, 600, 400);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Zoo Machines Control Center");
         primaryStage.show();
 
-        // TODO: fix screen not showing up issue;
-        // while (true) {
-        //     System.out.println("Here");
-        //     try {
-        //         // Thread.sleep(10000);
-        //         System.out.println("Start Comparing");
-        //         long systemTime = System.currentTimeMillis();
-        //         for (int i = 0; i < view.getMachines().size(); ++i) {
-        //             Machine mc = view.getMachines().get(i);
-        //             long machineTime = Long.parseLong(mc.getHr().getText()) * 60 * 60 * 1000 + Long.parseLong(mc.getMin().getText()) * 60 * 1000;
-        //             System.out.println(systemTime);
-        //             System.out.println(machineTime);
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(10);
+        scheduler.scheduleAtFixedRate(App::checkTimeAndExecuteMethod, 0, 1, TimeUnit.MINUTES);
+    }
 
-        //             if (Math.abs(machineTime - systemTime) <= 60 * 1000) {
-        //                 System.out.println("Less than a minute!\n");
-        //             }
-        //             else {
-        //                 System.out.println("Longer :( \n)");
-        //             }
-        //         }
-        //     }
-        //     catch (Exception e) {
-        //         e.printStackTrace();
-        //     }
-        // }
+    private static void checkTimeAndExecuteMethod() {
+        // Get the current system time
+        Calendar currentTime = Calendar.getInstance();
+        System.out.println(currentTime.getTime());
+
+        for (int i = 0; i < machines.size(); ++i ) {
+            Machine curr = machines.get(i);
+
+            // if machine is on, start comparing time
+            if (curr.getStatus()){
+                int targetHour = Integer.parseInt(curr.getHr().getText());
+                int targetMinute = Integer.parseInt(curr.getMin().getText());
+                
+                // Check if the current time matches the set time
+                if (currentTime.get(Calendar.HOUR_OF_DAY) == targetHour && currentTime.get(Calendar.MINUTE) == targetMinute) {
+                    System.out.println(curr.getName().getText() + "\t\t\tfeed.");
+                    Future<String> future = model.performRequest("GET", curr.getIP().getText());
+                    // try {
+                    //     String response = future.get(); // this will block until the response is available
+                    //     System.out.println(response);
+                    // } catch (InterruptedException | ExecutionException e) {
+                    //     e.printStackTrace();
+                    // }
+                }
+                else {
+                    System.out.println(curr.getName().getText() + "\t\t\tNOT feed. ");
+                }
+            }
+            else {
+                System.out.println(curr.getName().getText() + "\t\t\toff.");
+            }
+        }
+        System.out.println("--------------------------------------------");
     }
 }

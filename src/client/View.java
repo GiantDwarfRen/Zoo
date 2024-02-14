@@ -22,6 +22,8 @@ public class View {
     public View() {
         machinesVBox = new VBox();
         machinesVBox.setPadding(new Insets(20, 20, 20, 20));
+        //TODO: UI
+        // machinesVBox.setStyle("-fx-background-color: #f8f3c9;");
 
         machines = new ArrayList<>();
         add = new Button("add");
@@ -53,14 +55,6 @@ public class View {
         return add;
     }
 
-    // public void showAlert(String title, String content) {
-    //     Alert alert = new Alert(Alert.AlertType.INFORMATION);
-    //     alert.setTitle(title);
-    //     alert.setHeaderText(null);
-    //     alert.setContentText(content);
-    //     alert.showAndWait();
-    // }
-
     public void add() {
         Machine machine = new Machine();
 
@@ -72,6 +66,24 @@ public class View {
         machineHBox.getChildren().addAll(machine.getOnOffButton(), machine.getSaveRemoveButton());
 
         machinesVBox.getChildren().addAll(machineHBox);
+
+        machine.getSaveRemoveButton().setOnAction(e -> {
+            if (machine.getSaveRemoveButton().getText().equals("Remove")) {
+                machines.remove(machine);
+                machinesVBox.getChildren().remove(machineHBox);
+            }
+            else {
+                machine.getSaveRemoveButton().setText("Remove");
+                machine.getName().setEditable(false);
+                machine.getName().setMouseTransparent(true);
+                machine.getIP().setEditable(false);
+                machine.getIP().setMouseTransparent(true);
+                machine.getHr().setEditable(false);
+                machine.getHr().setMouseTransparent(true);
+                machine.getMin().setEditable(false);
+                machine.getMin().setMouseTransparent(true);
+            }
+        });
     }
 
     public ArrayList<Machine> getMachines() {

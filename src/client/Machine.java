@@ -40,10 +40,7 @@ public class Machine {
         });
 
         SaveRemoveButton.setOnAction(e -> {
-            if (SaveRemoveButton.getText().equals("Remove")) {
-                // TODO: remove this machine
-            }
-            else {
+            if (SaveRemoveButton.getText().equals("Save")) {
                 SaveRemoveButton.setText("Remove");
                 name.setEditable(false);
                 name.setMouseTransparent(true);
@@ -95,6 +92,10 @@ public class Machine {
 
     public Button getOnOffButton() {
         return OnOffButton;
+    }
+
+    public boolean getStatus() {
+        return status;
     }
 
     public String feed() {

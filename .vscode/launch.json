@@ -16,28 +16,28 @@
             "name": "ThreadingNoThread",
             "request": "launch",
             "mainClass": "multithreading.ThreadingNoThread",
-            "vmArgs": "--module-path '/Users/vincentren/Desktop/2023 Fall/CSE 110/javafx-sdk-21/lib' --add-modules javafx.controls,javafx.fxml"
+            "vmArgs": "--module-path '/Users/vincentren/Desktop/javafx-sdk-21/lib' --add-modules javafx.controls,javafx.fxml"
         },
         {
             "type": "java",
             "name": "ThreadingWithThread",
             "request": "launch",
             "mainClass": "multithreading.ThreadingWithThread",
-            "vmArgs": "--module-path '/Users/vincentren/Desktop/2023 Fall/CSE 110/javafx-sdk-21/lib' --add-modules javafx.controls,javafx.fxml"
+            "vmArgs": "--module-path '/Users/vincentren/Desktop/javafx-sdk-21/lib' --add-modules javafx.controls,javafx.fxml"
         },
         {
             "type": "java",
             "name": "AudioRecorder",
             "request": "launch",
             "mainClass": "multithreading.AudioRecorder",
-            "vmArgs": "--module-path '/Users/vincentren/Desktop/2023 Fall/CSE 110/javafx-sdk-21/lib' --add-modules javafx.controls,javafx.fxml"
+            "vmArgs": "--module-path '/Users/vincentren/Desktop/javafx-sdk-21/lib' --add-modules javafx.controls,javafx.fxml"
         },
         {
             "type": "java",
             "name": "GUI",
             "request": "launch",
             "mainClass": "client.App",
-            "vmArgs": "--module-path '/Users/vincentren/Desktop/2023 Fall/CSE 110/javafx-sdk-21/lib' --add-modules javafx.controls,javafx.fxml"
+            "vmArgs": "--module-path '/Users/vincentren/Desktop/javafx-sdk-21/lib' --add-modules javafx.controls,javafx.fxml"
         }
     ]
 }
