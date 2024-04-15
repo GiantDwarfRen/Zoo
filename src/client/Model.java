@@ -28,19 +28,19 @@ public class Model {
                     response = in.readLine();
                     in.close();
     
-                    // Wait for 5 seconds
-                    Thread.sleep(5000);
+                    // // Wait for 5 seconds
+                    // Thread.sleep(5000);
     
-                    // Second request to "/L"
-                    urlString = "http://" + ip + "/L";
-                    url = new URI(urlString).toURL();
-                    conn = (HttpURLConnection) url.openConnection();
-                    conn.setRequestMethod(method);
-                    conn.setDoOutput(true);
+                    // // Second request to "/L"
+                    // urlString = "http://" + ip + "/L";
+                    // url = new URI(urlString).toURL();
+                    // conn = (HttpURLConnection) url.openConnection();
+                    // conn.setRequestMethod(method);
+                    // conn.setDoOutput(true);
     
-                    in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                    response += "\n" + in.readLine();
-                    in.close();
+                    // in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                    // response += "\n" + in.readLine();
+                    // in.close();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
