@@ -4,6 +4,11 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.stage.Stage;
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.concurrent.*;
 
@@ -39,35 +44,42 @@ public class App extends Application {
     private static void checkTimeAndExecuteMethod() {
         // Get the current system time
         Calendar currentTime = Calendar.getInstance();
-        System.out.println(currentTime.getTime());
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd"); // format the date as "yyyyMMdd"
+        String date = formatter.format(currentTime.getTime());
 
-        for (int i = 0; i < machines.size(); ++i ) {
-            Machine curr = machines.get(i);
+        try (PrintWriter writer = new PrintWriter(new FileWriter(date + "_log.txt", true))) {
+            writer.println(currentTime.getTime());
 
-            // if machine is on, start comparing time
-            if (curr.getStatus()){
-                int targetHour = Integer.parseInt(curr.getHr().getText());
-                int targetMinute = Integer.parseInt(curr.getMin().getText());
-                
-                // Check if the current time matches the set time
-                if (currentTime.get(Calendar.HOUR_OF_DAY) == targetHour && currentTime.get(Calendar.MINUTE) == targetMinute) {
-                    System.out.println(curr.getName().getText() + "\t\t\tfeed.");
-                    Future<String> future = model.performRequest("GET", curr.getIP().getText());
-                    // try {
-                    //     String response = future.get(); // this will block until the response is available
-                    //     System.out.println(response);
-                    // } catch (InterruptedException | ExecutionException e) {
-                    //     e.printStackTrace();
-                    // }
+            for (int i = 0; i < machines.size(); ++i ) {
+                Machine curr = machines.get(i);
+
+                // if machine is on, start comparing time
+                if (curr.getStatus()){
+                    int targetHour = Integer.parseInt(curr.getHr().getText());
+                    int targetMinute = Integer.parseInt(curr.getMin().getText());
+                    
+                    // Check if the current time matches the set time
+                    if (currentTime.get(Calendar.HOUR_OF_DAY) == targetHour && currentTime.get(Calendar.MINUTE) == targetMinute) {
+                        writer.println(String.format("%-30s Feed", curr.getName().getText()));
+                        Future<String> future = model.performRequest("GET", curr.getIP().getText());
+                        // try {
+                        //     String response = future.get(); // this will block until the response is available
+                        //     writer.println(response);
+                        // } catch (InterruptedException | ExecutionException e) {
+                        //     e.printStackTrace();
+                        // }
+                    }
+                    else {
+                        writer.println(String.format("%-30s Not Feed", curr.getName().getText()));
+                    }
                 }
                 else {
-                    System.out.println(curr.getName().getText() + "\t\t\tNOT feed. ");
+                    writer.println(String.format("%-30s Off", curr.getName().getText()));
                 }
             }
-            else {
-                System.out.println(curr.getName().getText() + "\t\t\toff.");
-            }
+            writer.println("--------------------------------------------");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        System.out.println("--------------------------------------------");
     }
 }
