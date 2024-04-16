@@ -62,12 +62,6 @@ public class App extends Application {
                     if (currentTime.get(Calendar.HOUR_OF_DAY) == targetHour && currentTime.get(Calendar.MINUTE) == targetMinute) {
                         writer.println(String.format("%-30s Feed", curr.getName().getText()));
                         Future<String> future = model.performRequest("GET", curr.getIP().getText());
-                        // try {
-                        //     String response = future.get(); // this will block until the response is available
-                        //     writer.println(response);
-                        // } catch (InterruptedException | ExecutionException e) {
-                        //     e.printStackTrace();
-                        // }
                     }
                     else {
                         writer.println(String.format("%-30s Not Feed", curr.getName().getText()));

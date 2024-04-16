@@ -33,7 +33,6 @@ public class Machine {
         min.setPrefWidth(60);
 
         OnOffButton.setOnAction(e -> {
-            // TODO: compare feed time.
             status = !status;
             if (status) OnOffButton.setText("On");
             else OnOffButton.setText("Off");
@@ -109,16 +108,6 @@ public class Machine {
 
             BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             String response = in.readLine() + "\n\n";
-
-            // TODO: change to 1min in real practice
-            Thread.sleep(3000);
-
-            urlString = "http://" + ip.getText() + "/L";
-            url = new URI(urlString).toURL(); 
-            conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("GET");
-            conn.setDoOutput(true);
-            response += in.readLine() + "\n\n\n";
 
             in.close();
             return response;

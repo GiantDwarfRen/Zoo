@@ -28,7 +28,7 @@ public class Model {
                     response = in.readLine();
                     in.close();
     
-                    // // Wait for 5 seconds
+                    // // Wait for 5 seconds to stop
                     // Thread.sleep(5000);
     
                     // // Second request to "/L"

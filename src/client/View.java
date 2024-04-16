@@ -1,8 +1,5 @@
 package client;
 
-import javafx.collections.ArrayChangeListener;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
